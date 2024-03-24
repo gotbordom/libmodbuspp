@@ -10,28 +10,28 @@ using namespace std;
 using namespace Modbus;
 
 int main (int argc, char **argv) {
-  string port = string ("/dev/ttyUSB0");
+  string port = string ("/dev/ttyACM0");
 
   if (argc > 1) {
 
     port = argv[1]; // the serial port can be provided as a parameter on the command line.
   }
 
-  Master mb (Rtu, port, "19200E1"); // new master on RTU
+  Master mb (Rtu, port, "9600N1"); // new master on RTU
   // if you have to handle the DE signal of the line driver with RTS,
   // you should uncomment the lines below...
   // mb.rtu().setRts(RtsDown);
   // mb.rtu().setSerialMode(Rs485);
 
-  Slave & slv = mb.addSlave (8);
+  Slave & slv = mb.addSlave (2);
 
   cout << "Reads coils of slave[" << slv.number() << "] on " <<
        mb.connection() << " (" << mb.settings() << ")" << endl;
 
   if (mb.open ()) { // open a connection
-    bool coil[5];
+    bool coil[16];
 
-    int ncoils = slv.readCoils (1, coil, 5); // reads coils 1 to 5
+    int ncoils = slv.readCoils (1, coil, 16); // reads coils 1 to 5
     if (ncoils > 0) {
 
       // if success, print the binary values

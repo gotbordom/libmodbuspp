@@ -11,20 +11,20 @@ using namespace Modbus;
 
 // -----------------------------------------------------------------------------
 int main (int argc, char **argv) {
-  string port ("/dev/ttyUSB0");
+  string port ("/dev/ttyACM0");
 
   if (argc > 1) {
 
     port = argv[1]; // the serial port can be provided as a parameter on the command line.
   }
 
-  Master mb (Rtu, port , "38400E1"); // new master on RTU
+  Master mb (Rtu, port , "9600N1"); // new master on RTU
   // if you have to handle the DE signal of the line driver with RTS,
   // you should uncomment the lines below...
   // mb.rtu().setRts(RtsDown);
   // mb.rtu().setSerialMode(Rs485);
 
-  Slave & slv = mb.addSlave (33); // SolarPi Pressure meter
+  Slave & slv = mb.addSlave (2); // SolarPi Pressure meter
 
   cout << "Reads input registers of slave[" << slv.number() << "] on " <<
        mb.connection() << " (" << mb.settings() << ")" << endl;

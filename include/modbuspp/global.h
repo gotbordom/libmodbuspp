@@ -26,11 +26,12 @@
 /**
  * @brief libmodbuspp namespace
  */
-namespace Modbus {
+namespace Modbus
+{
 
-  const int Broadcast = MODBUS_BROADCAST_ADDRESS; ///< Modbus Broadcast Address
-  const int TcpSlave = MODBUS_TCP_SLAVE; ///< Can be used in TCP mode to restore the default value
-  const int Unknown = -1; ///< Value corresponding to an unknown parameter
+  const int Broadcast = MODBUS_BROADCAST_ADDRESS;      ///< Modbus Broadcast Address
+  const int TcpSlave = MODBUS_TCP_SLAVE;               ///< Can be used in TCP mode to restore the default value
+  const int Unknown = -1;                              ///< Value corresponding to an unknown parameter
   const uint16_t MaxPduLength = MODBUS_MAX_PDU_LENGTH; ///< maximum size of a PDU
   const uint8_t ExceptionFlag = 0x80;
 
@@ -38,7 +39,8 @@ namespace Modbus {
    * @enum Net
    * @brief Enumeration of network layers (backends) used by Modbus
    */
-  enum Net {
+  enum Net
+  {
 
     /**
      * @brief RTU backend
@@ -55,14 +57,15 @@ namespace Modbus {
      * used for communications over TCP IPv4 and IPv6 networks.
      */
     Tcp,
-    NoNet = Unknown  ///< Unknown network backend
+    NoNet = Unknown ///< Unknown network backend
   };
 
   /**
    * @enum SerialMode
    * @brief Enumeration of RTU serial link modes
    */
-  enum SerialMode {
+  enum SerialMode
+  {
     /**
      * @brief RS232
      *
@@ -83,7 +86,7 @@ namespace Modbus {
      * effectively over long distances and in electrically noisy environments.
      */
     Rs485 = MODBUS_RTU_RS485,
-    UnknownMode = Unknown  ///< Unknown serial mode
+    UnknownMode = Unknown ///< Unknown serial mode
   };
 
   /**
@@ -104,31 +107,34 @@ namespace Modbus {
    *
    * The @b RtsDown mode applies the same procedure but with an inverted RTS flag.
    */
-  enum SerialRts {
+  enum SerialRts
+  {
     RtsNone = MODBUS_RTU_RTS_NONE, ///< no use of the RTS.
-    RtsUp = MODBUS_RTU_RTS_UP, ///< RTS flag ON during communication, OFF outside.
+    RtsUp = MODBUS_RTU_RTS_UP,     ///< RTS flag ON during communication, OFF outside.
     RtsDown = MODBUS_RTU_RTS_DOWN, ///< RTS flag OFF during communication, ON outside.
-    UnknownRts = Unknown   ///< Unknown RTS mode.
+    UnknownRts = Unknown           ///< Unknown RTS mode.
   };
 
   /**
    * @enum Endian
    * @brief Sequential order in which bytes are arranged
    */
-  enum Endian {
-    EndianBigBig = 0x00,    ///< Bytes in big endian order, word in big endian order : ABCD
-    EndianBig = EndianBigBig, ///< Big endian order : ABCD
-    EndianBigLittle = 0x01, ///< Bytes in big endian order, word in little endian order : CDAB
-    EndianLittleBig = 0x02, ///< Bytes in little endian order, word in big endian order : BADC
-    EndianLittleLittle = 0x03, ///< Bytes in little endian order, word in little endian order : DCBA
+  enum Endian
+  {
+    EndianBigBig = 0x00,              ///< Bytes in big endian order, word in big endian order : ABCD
+    EndianBig = EndianBigBig,         ///< Big endian order : ABCD
+    EndianBigLittle = 0x01,           ///< Bytes in big endian order, word in little endian order : CDAB
+    EndianLittleBig = 0x02,           ///< Bytes in little endian order, word in big endian order : BADC
+    EndianLittleLittle = 0x03,        ///< Bytes in little endian order, word in little endian order : DCBA
     EndianLittle = EndianLittleLittle ///< Little endian order : DCBA
   };
-  
+
   /**
    * @enum Table
    * @brief Enumerations of data types managed by MODBUS
    */
-  enum Table {
+  enum Table
+  {
     DiscreteInput = 0,
     Coil = 1,
     InputRegister = 3,
@@ -139,7 +145,8 @@ namespace Modbus {
    * @enum Function
    * @brief Enumerations of MODBUS functions managed by libmodbuspp
    */
-  enum Function {
+  enum Function
+  {
     ReadCoils = MODBUS_FC_READ_COILS,
     ReadDiscreteInputs = MODBUS_FC_READ_DISCRETE_INPUTS,
     ReadHoldingRegisters = MODBUS_FC_READ_HOLDING_REGISTERS,
@@ -166,7 +173,8 @@ namespace Modbus {
    * @enum ExceptionCode
    * @brief Enumerations of MODBUS exception code managed by libmodbuspp
    */
-  enum ExceptionCode {
+  enum ExceptionCode
+  {
     IllegalFunction = MODBUS_EXCEPTION_ILLEGAL_FUNCTION,
     IllegalDataAddress = MODBUS_EXCEPTION_ILLEGAL_DATA_ADDRESS,
     IllegalDataValue = MODBUS_EXCEPTION_ILLEGAL_DATA_VALUE,
@@ -180,12 +188,13 @@ namespace Modbus {
     GatewayTarget = MODBUS_EXCEPTION_GATEWAY_TARGET,
     ExceptionMax = MODBUS_EXCEPTION_MAX
   };
-  
+
   /**
    * @enum DataEnum
    * @brief Enumerations of Data T
    */
-  enum DataEnum {
+  enum DataEnum
+  {
     Uint16 = 0,
     Uint32,
     Uint64,
@@ -196,6 +205,6 @@ namespace Modbus {
     Double,
     LongDouble
   };
-  
+
 }
 /* ========================================================================== */

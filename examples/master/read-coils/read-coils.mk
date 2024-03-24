@@ -5,8 +5,8 @@
 ## Debug
 ProjectName            :=read-coils
 ConfigurationName      :=Debug
-WorkspacePath          :=/home/pascal/src/libmodbuspp
-ProjectPath            :=/home/pascal/src/libmodbuspp/examples/master/read-coils
+WorkspacePath          :=/home/Documents/libmodbuspp/src/libmodbuspp
+ProjectPath            :=/home/Documents/libmodbuspp/src/libmodbuspp/examples/master/read-coils
 IntermediateDirectory  :=./Debug
 OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=

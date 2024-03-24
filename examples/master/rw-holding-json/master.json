@@ -1,28 +1,22 @@
 {
   "modbuspp-master": {
     "mode": "rtu",
-    "connection": "/dev/tnt0",
-    "settings": "38400E1",
+    "connection": "/dev/ttyACM0",
+    "settings": "9600N1",
     "debug": true,
     "response-timeout": 500,
     "byte-timeout": 500,
     "rtu": {
-      "mode": "rs232",
+      "mode": "rs485",
       "rts": "none",
       "rts-delay": 1000
     },
     "slaves": [
       {
-        "id": 32
+        "id": 1
       },
       {
-        "id": 33
-      },
-      {
-        "id": 34
-      },
-      {
-        "id": 35
+        "id": 2
       }
     ]
   }

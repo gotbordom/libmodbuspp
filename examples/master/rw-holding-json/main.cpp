@@ -15,104 +15,105 @@
 using namespace std;
 using namespace Modbus;
 
-int main (int argc, char **argv) {
-  string jsonfile ("../master.json");
+int main(int argc, char **argv)
+{
+  string jsonfile("./master.json");
 
-  if (argc > 1) {
+  if (argc > 1)
+  {
 
     jsonfile = argv[1]; // the JSON filename can be provided as a parameter on the command line.
   }
 
-  Master mb (jsonfile, "modbuspp-master");
-  Slave & slv = mb.slave (33); // SolarPi Pressure meter
+  Master mb(jsonfile, "modbuspp-master");
+  Slave &slv = mb.slave(2); // SolarPi Pressure meter
 
-  cout << "Read/Write holding registers of slave[" << slv.number() << "] on " <<
-       mb.connection() << " (" << mb.settings() << ")" << endl;
+  cout << "Read/Write holding registers of slave[" << slv.number() << "] on " << mb.connection() << " (" << mb.settings() << ")" << endl;
 
-  if (mb.open ()) { // open a connection
+  if (mb.open())
+  { // open a connection
     // success, do what you want here
     int ret;
 
-    Data<float, EndianBigLittle> backup[4];
+    Data<uint16_t, EndianBigBig> backup[16];
     // the bytes in the registers are arranged in big endian.
     // the solarpi calibration registers are arranged in little endian.
-    Data<float, EndianBigLittle> bank1[4];
-    Data<float, EndianBigLittle> bank2[4];
+    // Data<uint16_t, EndianBigBig> bank1[16];
+    Data<uint16_t, EndianBigBig> bank2[16];
+    Data<uint16_t, EndianBig> turn_on = 0x0100;
+    Data<uint16_t, EndianBig> turn_off = 0x0200;
+    Data<uint16_t, EndianBig> turn_on_off = 0x0300;
 
     // reads values ....
-    if (slv.readRegisters (1, backup, 4) > 0) {
+    if (slv.readRegisters(1, backup, 16) > 0)
+    {
 
       // then print them !
-      cout << "R0=" << backup[0].value() << endl;
-      cout << "R1=" << backup[1].value() << endl;
-      cout << "R2=" << backup[2].value() << endl;
-      cout << "R3=" << backup[3].value() << endl;
-    }
-    else {
-      cerr << "Unable to read holding registers ! "  << mb.lastError() << endl;
-      exit (EXIT_FAILURE);
-    }
-
-    // set values ...
-    bank1[0] = 152.3;
-    bank1[1] = 1010.7;
-    bank1[2] = 45;
-    bank1[3] = 901;
-
-    // then writing to registers
-    ret = slv.writeRegisters (1, bank1, 4);
-    if (ret < 0) {
-
-      cerr << "Unable to write holding registers ! "  << mb.lastError() << endl;
-      exit (EXIT_FAILURE);
-    }
-    else {
-      cout << ret << " registers written (16-bit)." << endl;
-    }
-
-    // check if the values have been written
-    if (slv.readRegisters (1, bank2, 4) > 0) {
-      bool ok = true;
-      
-      for (int i = 0; i < 4; i++) {
-        ok = ok && (bank1[i] == bank2[i]);
-      }
-      
-      if (ok) {
-
-        cout << "Registers have been correctly written" << endl;
-      }
-      else {
-
-        cout << "Registers were not correctly written" << endl;
-        // then print them !
-        cout << "R0=" << bank2[0].value() << endl;
-        cout << "R1=" << bank2[1].value() << endl;
-        cout << "R2=" << bank2[2].value() << endl;
-        cout << "R3=" << bank2[3].value() << endl;
+      cout << "Reading registers" << endl;
+      for (auto i = 2; i < 18; i++)
+      {
+        cout << "R" << i << "=" << backup[i].value() << endl;
       }
     }
-    else {
-      cerr << "Unable to read holding registers ! "  << mb.lastError() << endl;
-      exit (EXIT_FAILURE);
+    else
+    {
+      cerr << "Unable to read holding registers ! " << mb.lastError() << endl;
+      exit(EXIT_FAILURE);
     }
 
-    ret = slv.writeRegisters (1, backup, 4);
-    if (ret < 0) {
+    // write to registers
+    for (auto i = 2; i < 18; ++i)
+    {
+      cout << "Writing reg[" << i << "]" << endl;
+      ret = slv.writeRegister(i, turn_on_off);
+      if (ret < 0)
+      {
+        cerr << "Unable to write holding registers ! " << mb.lastError() << endl;
+        exit(EXIT_FAILURE);
+      }
+      else
+      {
+        cout << ret << " registers written (16-bit)." << endl;
+      }
+    }
+    // // check if the values have been written
+    // if (slv.readRegisters (1, bank2, 16) > 0) {
+    //   bool ok = true;
 
-      cerr << "Unable to write holding registers ! "  << mb.lastError() << endl;
-      exit (EXIT_FAILURE);
-    }
-    else {
-      cout << ret << " restored registers (16-bit)." << endl;
-    }
+    //   for (int i = 0; i < 16; i++) {
+    //     ok = ok && (bank1[i] == bank2[i]);
+    //   }
+
+    //   if (ok) {
+
+    //     cout << "Registers have been correctly written" << endl;
+    //   }
+    //   else {
+
+    //     cout << "Registers were not correctly written" << endl;
+    //     // then print them !
+    //     cout << "R0=" << bank2[0].value() << endl;
+    //     cout << "R1=" << bank2[1].value() << endl;
+    //     cout << "R2=" << bank2[2].value() << endl;
+    //     cout << "R3=" << bank2[3].value() << endl;
+    //     cout << "R10=" << bank2[10].value() << endl;
+    //     cout << "R11=" << bank2[11].value() << endl;
+    //     cout << "R12=" << bank2[12].value() << endl;
+    //     cout << "R13=" << bank2[13].value() << endl;
+    //   }
+    // }
+    // else {
+    //   cerr << "Unable to read holding registers ! "  << mb.lastError() << endl;
+    //   exit (EXIT_FAILURE);
+    // }
 
     mb.close();
   }
-  else {
+  else
+  {
     cerr << "Unable to open MODBUS connection to " << mb.connection() << " : "
          << mb.lastError() << endl;
-    exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
   }
 
   return 0;

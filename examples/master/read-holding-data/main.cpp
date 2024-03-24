@@ -14,20 +14,20 @@ using namespace std;
 using namespace Modbus;
 
 int main (int argc, char **argv) {
-  string port ("/dev/ttyUSB0");
+  string port ("/dev/ttyACM0");
 
   if (argc > 1) {
 
     port = argv[1]; // the serial port can be provided as a parameter on the command line.
   }
 
-  Master mb (Rtu, port , "38400E1"); // new master on RTU
+  Master mb (Rtu, port , "9600N1"); // new master on RTU
   // if you have to handle the DE signal of the line driver with RTS,
   // you should uncomment the lines below...
   // mb.rtu().setRts(RtsDown);
   // mb.rtu().setSerialMode(Rs485);
 
-  Slave & slv = mb.addSlave (33); // SolarPi Pressure meter
+  Slave & slv = mb.addSlave (2); // SolarPi Pressure meter
 
   cout << "Reads holding registers of slave[" << slv.number() << "] on " <<
        mb.connection() << " (" << mb.settings() << ")" << endl;
@@ -37,21 +37,30 @@ int main (int argc, char **argv) {
 
     // the bytes in the registers are arranged in big endian.
     // the solarpi calibration registers are arranged in little endian.
-    Data<float, EndianBigLittle> registers[4];
+    Data<uint16_t, EndianBigBig> registers_in[16];
+    Data<uint16_t, EndianBigBig> register_out = 1;
 
     // reads values ....
-    if (slv.readRegisters (1, registers, 4) > 0) {
-
-      // then print them !
-      cout << "R0=" << registers[0].value() << endl;
-      cout << "R1=" << registers[1].value() << endl;
-      cout << "R2=" << registers[2].value() << endl;
-      cout << "R3=" << registers[3].value() << endl;
+    if (slv.readRegisters (1, registers_in, 16) > 0) {
+      // then print them !i
+      for (auto i = 0; i < 16; i++) {
+        cout << "R" << i << "=" << registers_in[i].value() << endl;
+      }
     }
     else {
       cerr << "Unable to read input registers ! "  << mb.lastError() << endl;
       exit (EXIT_FAILURE);
     }
+
+    // now let's write some values
+    if (slv.writeRegister(16, register_out)) {
+      cout << "Wrote registers" << endl;
+    }
+    else {
+      cerr << "Unable to read input registers ! "  << mb.lastError() << endl;
+      exit (EXIT_FAILURE);
+    }
+
     mb.close();
   }
   else {

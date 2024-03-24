@@ -16,6 +16,7 @@
  */
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <modbuspp/data.h>
@@ -512,8 +513,10 @@ namespace Modbus {
        */
       template <typename T, Endian e> int writeRegister (int addr, Data<T, e> & value) {
         
+        std::cout << "Validating I am in my version of this function:" << std::endl;
         value.updateRegisters();
-        return writeRegisters (addr, value.registers().data(), value.registers().size());
+        return writeRegister (addr, value.registers().front());
+        // return writeRegisters (addr, value.registers().data(), value.registers().size());
       }
       
       /**
