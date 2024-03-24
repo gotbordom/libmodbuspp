@@ -21,6 +21,7 @@
 #include <array>
 #include <type_traits>
 #include <limits>
+#include <stdexcept>
 #include <string>
 
 #include <modbuspp/global.h>
