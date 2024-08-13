@@ -512,8 +512,6 @@ namespace Modbus {
        * Otherwise it shall return -1 and set errno.
        */
       template <typename T, Endian e> int writeRegister (int addr, Data<T, e> & value) {
-        
-        std::cout << "Validating I am in my version of this function:" << std::endl;
         value.updateRegisters();
         return writeRegister (addr, value.registers().front());
         // return writeRegisters (addr, value.registers().data(), value.registers().size());
